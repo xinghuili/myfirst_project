@@ -1,0 +1,191 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+	xmlns:task="http://www.springframework.org/schema/task"
+	xmlns:aop="http://www.springframework.org/schema/aop"  
+	xmlns:p="http://www.springframework.org/schema/p"
+	xmlns:context="http://www.springframework.org/schema/context" 
+	xmlns:tx="http://www.springframework.org/schema/tx"
+	xsi:schemaLocation="
+		http://www.springframework.org/schema/beans
+		http://www.springframework.org/schema/beans/spring-beans-4.0.xsd
+		http://www.springframework.org/schema/context
+		http://www.springframework.org/schema/context/spring-context-4.0.xsd
+	    http://www.springframework.org/schema/aop
+	    http://www.springframework.org/schema/aop/spring-aop-4.0.xsd
+		http://www.springframework.org/schema/tx
+		http://www.springframework.org/schema/tx/spring-tx-4.0.xsd">
+
+	<!-- 1. 数据源 : DriverManagerDataSource -->
+	<!--  
+	<bean id="dataSource"
+		class="org.springframework.jdbc.datasource.DriverManagerDataSource">
+		<property name="driverClassName" value="com.mysql.jdbc.Driver" />
+		<property name="url" value="jdbc:mysql://localhost:3306/luzhongjianyu" />
+		<property name="username" value="root" />
+		<property name="password" value="123" />
+	</bean>
+  
+
+    <bean class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
+        <property name="locations">
+            <list>
+                <value>classpath:config/*.properties</value>
+            </list>
+        </property>
+    </bean>
+	 -->
+	 
+	<context:component-scan base-package="com.kuheng"></context:component-scan>
+
+<!-- 	<bean id="dataSource" class="com.alibaba.druid.pool.DruidDataSource" init-method="init" destroy-method="close">
+		 <property name="driverClassName" value="com.mysql.jdbc.Driver"/>
+		 <property name="url" value="jdbc:mysql://218.59.146.70:3306/56360?useUnicode=true&amp;characterEncoding=utf-8" />
+	     <property name="username" value="56360app"/>
+	     <property name="password" value="123456" />
+	     <property name="maxActive" value="200" />
+	     filters：统计监控信息，value是一个string,支持组合配置，如stat,log4j,那么问题来了，如果自定义的filter该如何配置呢，可以通过bean的形式添加
+         <property name="filters" value="${filters}" /> 
+	     <property name="proxyFilters">
+	     	<list>
+	     		<ref bean="stat-filter"/>
+	     	</list>
+	     </property> 
+	</bean> -->
+
+<!-- 德鲁伊配置数据连接池 -->	
+	<bean id="mainDataSource" class="com.alibaba.druid.pool.DruidDataSource" init-method="init" destroy-method="close">
+		 <property name="driverClassName" value="com.mysql.jdbc.Driver"/>
+		 <!-- <property name="url" value="jdbc:mysql://218.59.146.70:3306/56360?useUnicode=true&amp;characterEncoding=utf-8" /> -->
+		 <property name="url" value="jdbc:mysql://202.102.145.193:3306/56360app1?useUnicode=true&amp;characterEncoding=utf-8" />
+	     <property name="username" value="56360app"/>
+	     <property name="password" value="123456" />
+	     <property name="maxActive" value="200" />
+	     <!-- filters：统计监控信息，value是一个string,支持组合配置，如stat,log4j,那么问题来了，如果自定义的filter该如何配置呢，可以通过bean的形式添加 -->
+         <property name="filters" value="${filters}" /> 
+	     <property name="proxyFilters">
+	     	<list>
+	     		<ref bean="stat-filter"/>
+	     	</list>
+	     </property> 
+	</bean>
+	
+	<bean id="otherDataSource" class="com.alibaba.druid.pool.DruidDataSource" init-method="init" destroy-method="close">
+		 <property name="driverClassName" value="com.microsoft.sqlserver.jdbc.SQLServerDriver"/>
+		 <property name="url" value="jdbc:sqlserver://218.59.144.244:5371;databasename=db360" />
+	     <property name="username" value="jnhyw_mydb001"/>
+	     <property name="password" value="jnhyw_mypwd008" />
+	     <property name="maxActive" value="200" />
+	     <!-- filters：统计监控信息，value是一个string,支持组合配置，如stat,log4j,那么问题来了，如果自定义的filter该如何配置呢，可以通过bean的形式添加 -->
+	     <property name="filters" value="${filters}" />
+	     <property name="proxyFilters">
+	     	<list>
+	     		<ref bean="stat-filter"/>
+	     	</list>
+	     </property> 
+	</bean>
+
+<!--动态配置数据源   -->
+   <bean id ="dataSource" class= "com.kuheng.datasource.MultipleRoutingDataSource" >  
+          <property name ="defaultTargetDataSource" ref="mainDataSource"></property > 
+          <property name ="targetDataSources">  
+                <map key-type ="java.lang.String">  
+                      <entry value-ref ="mainDataSource" key= "mainDataSource"></entry >  
+                      <entry value-ref ="otherDataSource" key= "otherDataSource"></entry >  
+                </map >  
+          </property >  
+    </bean> 
+	
+	<!-- druid监控统计bean 对应上文dataSource中的proxyFilters -->
+	<bean id="stat-filter" class="com.alibaba.druid.filter.stat.StatFilter">
+		<property name="slowSqlMillis" value="1000" />
+    	<property name="logSlowSql" value="true" />
+	</bean>
+	
+     
+	<!--
+		2. mybatis的SqlSession的工厂: SqlSessionFactoryBean dataSource:引用数据源
+
+		MyBatis定义数据源,同意加载配置
+	-->
+	<bean id="sqlSessionFactory" class="org.mybatis.spring.SqlSessionFactoryBean">
+		<property name="dataSource" ref="dataSource"></property>
+        <property name="mapperLocations" value="classpath*:/mapper/*/*/*.xml"></property>
+		<property name="configLocation" value="classpath:config/mybatis-config.xml" /> 
+	</bean>
+
+	<!--
+		3. mybatis自动扫描加载Sql映射文件/接口 : MapperScannerConfigurer sqlSessionFactory
+
+		basePackage:指定sql映射文件/接口所在的包（自动扫描）
+	-->
+	<bean class="org.mybatis.spring.mapper.MapperScannerConfigurer">
+		<property name="basePackage" value="com.kuheng.dao"></property>
+		<property name="sqlSessionFactory" ref="sqlSessionFactory"></property>
+	</bean>
+
+	<!--
+		4. 事务管理 : DataSourceTransactionManager dataSource:引用上面定义的数据源
+
+	<bean id="txManager"
+		class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
+		<property name="dataSource" ref="dataSource"></property>
+	</bean>
+	-->
+	<!-- 5. 使用声明式事务
+		 transaction-manager：引用上面定义的事务管理器
+	 
+	<tx:annotation-driven transaction-manager="txManager" />
+	-->
+	
+	<!-- 对dataSource 数据源进行事务管理 -->  
+    <bean id="transactionManager" class="org.springframework.jdbc.datasource.DataSourceTransactionManager"  
+          p:dataSource-ref="dataSource"/>  
+  
+    <!-- 事务管理 通知 -->  
+    <tx:advice id="txAdvice" transaction-manager="transactionManager">  
+        <tx:attributes>  
+           <!-- 对insert,update,delete 开头的方法进行事务管理,只要有异常就回滚 -->  
+            <tx:method name="insert*" propagation="REQUIRED" rollback-for="java.lang.Throwable"/>  
+            <tx:method name="update*" propagation="REQUIRED" rollback-for="java.lang.Throwable"/>  
+            <tx:method name="delete*" propagation="REQUIRED" rollback-for="java.lang.Throwable"/>  
+            <!-- select,count开头的方法,开启只读,提高数据库访问性能 -->  
+            <tx:method name="select*" read-only="true"/>  
+            <tx:method name="count*" read-only="true"/>  
+            <!-- 对其他方法 使用默认的事务管理 -->  
+            <tx:method name="*"/>  
+        </tx:attributes>  
+    </tx:advice>  
+  
+    <!-- 事务 aop 配置 -->  
+   <aop:config>  
+       <aop:pointcut id="serviceMethods" expression="execution(* com.kuheng.service..*(..))"/>  
+        <aop:advisor advice-ref="txAdvice" pointcut-ref="serviceMethods"/>  
+    </aop:config>  
+ 
+   <!-- 配置使Spring采用CGLIB代理  --> 
+    <aop:aspectj-autoproxy proxy-target-class="true"/>  
+  
+    <!-- 启用对事务注解的支持 -->  
+    <tx:annotation-driven transaction-manager="transactionManager"/> 
+	
+	
+	<!-- 使用ehcache缓存 -->    
+   <bean id="ehCacheManager" class="org.springframework.cache.ehcache.EhCacheManagerFactoryBean">  
+     <property name="configLocation" value="classpath:ehcache.xml" />  
+     <property name="shared" value="true"></property> 
+   </bean>
+	
+
+    <!-- 支持上传文件 -->  
+<bean id="multipartResolver" class="org.springframework.web.multipart.commons.CommonsMultipartResolver">
+     <property name="maxUploadSize" value="104857600" />
+     <property name="maxInMemorySize" value="4096" />
+     <property name="defaultEncoding" value="UTF-8"></property>
+</bean>
+
+
+
+
+
+</beans>

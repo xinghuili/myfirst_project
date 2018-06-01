@@ -1,0 +1,252 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.kuheng.dao.KuCheZhuLineMapper" >
+  <resultMap id="BaseResultMap" type="com.kuheng.entity.member.KuCheZhuLine" >
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="userid" property="userid" jdbcType="INTEGER" />
+    <result column="start_province" property="startProvince" jdbcType="VARCHAR" />
+    <result column="start_city" property="startCity" jdbcType="VARCHAR" />
+    <result column="start_town" property="startTown" jdbcType="VARCHAR" />
+    <result column="stop_province" property="stopProvince" jdbcType="VARCHAR" />
+    <result column="stop_city" property="stopCity" jdbcType="VARCHAR" />
+    <result column="stop_town" property="stopTown" jdbcType="VARCHAR" />
+    <result column="car_type" property="carType" jdbcType="VARCHAR" />
+    <result column="car_length" property="carLength" jdbcType="VARCHAR" />
+    <result column="send_type" property="sendType" jdbcType="BIT" />
+    <result column="addtime" property="addtime" jdbcType="INTEGER" />
+    <result column="lasttime" property="lasttime" jdbcType="INTEGER" />
+    <result column="filed1" property="filed1" jdbcType="VARCHAR" />
+    <result column="filed2" property="filed2" jdbcType="VARCHAR" />
+    <result column="filed3" property="filed3" jdbcType="VARCHAR" />
+    <result column="filed4" property="filed4" jdbcType="VARCHAR" />
+    <result column="filed5" property="filed5" jdbcType="VARCHAR" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, userid, start_province, start_city, start_town, stop_province, stop_city, stop_town, 
+    car_type, car_length, send_type, addtime, lasttime, filed1, filed2, filed3, filed4, 
+    filed5
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    from ku_chezhu_line
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from ku_chezhu_line
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="com.kuheng.entity.member.KuCheZhuLine" >
+    insert into ku_chezhu_line (id, userid, start_province, 
+      start_city, start_town, stop_province, 
+      stop_city, stop_town, car_type, 
+      car_length, send_type, addtime, 
+      lasttime, filed1, filed2, 
+      filed3, filed4, filed5
+      )
+    values (#{id,jdbcType=INTEGER}, #{userid,jdbcType=INTEGER}, #{startProvince,jdbcType=VARCHAR}, 
+      #{startCity,jdbcType=VARCHAR}, #{startTown,jdbcType=VARCHAR}, #{stopProvince,jdbcType=VARCHAR}, 
+      #{stopCity,jdbcType=VARCHAR}, #{stopTown,jdbcType=VARCHAR}, #{carType,jdbcType=VARCHAR}, 
+      #{carLength,jdbcType=VARCHAR}, #{sendType,jdbcType=BIT}, #{addtime,jdbcType=INTEGER}, 
+      #{lasttime,jdbcType=INTEGER}, #{filed1,jdbcType=VARCHAR}, #{filed2,jdbcType=VARCHAR}, 
+      #{filed3,jdbcType=VARCHAR}, #{filed4,jdbcType=VARCHAR}, #{filed5,jdbcType=VARCHAR}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="com.kuheng.entity.member.KuCheZhuLine" >
+    insert into ku_chezhu_line
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="userid != null" >
+        userid,
+      </if>
+      <if test="startProvince != null" >
+        start_province,
+      </if>
+      <if test="startCity != null" >
+        start_city,
+      </if>
+      <if test="startTown != null" >
+        start_town,
+      </if>
+      <if test="stopProvince != null" >
+        stop_province,
+      </if>
+      <if test="stopCity != null" >
+        stop_city,
+      </if>
+      <if test="stopTown != null" >
+        stop_town,
+      </if>
+      <if test="carType != null" >
+        car_type,
+      </if>
+      <if test="carLength != null" >
+        car_length,
+      </if>
+      <if test="sendType != null" >
+        send_type,
+      </if>
+      <if test="addtime != null" >
+        addtime,
+      </if>
+      <if test="lasttime != null" >
+        lasttime,
+      </if>
+      <if test="filed1 != null" >
+        filed1,
+      </if>
+      <if test="filed2 != null" >
+        filed2,
+      </if>
+      <if test="filed3 != null" >
+        filed3,
+      </if>
+      <if test="filed4 != null" >
+        filed4,
+      </if>
+      <if test="filed5 != null" >
+        filed5,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=INTEGER},
+      </if>
+      <if test="userid != null" >
+        #{userid,jdbcType=INTEGER},
+      </if>
+      <if test="startProvince != null" >
+        #{startProvince,jdbcType=VARCHAR},
+      </if>
+      <if test="startCity != null" >
+        #{startCity,jdbcType=VARCHAR},
+      </if>
+      <if test="startTown != null" >
+        #{startTown,jdbcType=VARCHAR},
+      </if>
+      <if test="stopProvince != null" >
+        #{stopProvince,jdbcType=VARCHAR},
+      </if>
+      <if test="stopCity != null" >
+        #{stopCity,jdbcType=VARCHAR},
+      </if>
+      <if test="stopTown != null" >
+        #{stopTown,jdbcType=VARCHAR},
+      </if>
+      <if test="carType != null" >
+        #{carType,jdbcType=VARCHAR},
+      </if>
+      <if test="carLength != null" >
+        #{carLength,jdbcType=VARCHAR},
+      </if>
+      <if test="sendType != null" >
+        #{sendType,jdbcType=BIT},
+      </if>
+      <if test="addtime != null" >
+        #{addtime,jdbcType=INTEGER},
+      </if>
+      <if test="lasttime != null" >
+        #{lasttime,jdbcType=INTEGER},
+      </if>
+      <if test="filed1 != null" >
+        #{filed1,jdbcType=VARCHAR},
+      </if>
+      <if test="filed2 != null" >
+        #{filed2,jdbcType=VARCHAR},
+      </if>
+      <if test="filed3 != null" >
+        #{filed3,jdbcType=VARCHAR},
+      </if>
+      <if test="filed4 != null" >
+        #{filed4,jdbcType=VARCHAR},
+      </if>
+      <if test="filed5 != null" >
+        #{filed5,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.kuheng.entity.member.KuCheZhuLine" >
+    update ku_chezhu_line
+    <set >
+      <if test="userid != null" >
+        userid = #{userid,jdbcType=INTEGER},
+      </if>
+      <if test="startProvince != null" >
+        start_province = #{startProvince,jdbcType=VARCHAR},
+      </if>
+      <if test="startCity != null" >
+        start_city = #{startCity,jdbcType=VARCHAR},
+      </if>
+      <if test="startTown != null" >
+        start_town = #{startTown,jdbcType=VARCHAR},
+      </if>
+      <if test="stopProvince != null" >
+        stop_province = #{stopProvince,jdbcType=VARCHAR},
+      </if>
+      <if test="stopCity != null" >
+        stop_city = #{stopCity,jdbcType=VARCHAR},
+      </if>
+      <if test="stopTown != null" >
+        stop_town = #{stopTown,jdbcType=VARCHAR},
+      </if>
+      <if test="carType != null" >
+        car_type = #{carType,jdbcType=VARCHAR},
+      </if>
+      <if test="carLength != null" >
+        car_length = #{carLength,jdbcType=VARCHAR},
+      </if>
+      <if test="sendType != null" >
+        send_type = #{sendType,jdbcType=BIT},
+      </if>
+      <if test="addtime != null" >
+        addtime = #{addtime,jdbcType=INTEGER},
+      </if>
+      <if test="lasttime != null" >
+        lasttime = #{lasttime,jdbcType=INTEGER},
+      </if>
+      <if test="filed1 != null" >
+        filed1 = #{filed1,jdbcType=VARCHAR},
+      </if>
+      <if test="filed2 != null" >
+        filed2 = #{filed2,jdbcType=VARCHAR},
+      </if>
+      <if test="filed3 != null" >
+        filed3 = #{filed3,jdbcType=VARCHAR},
+      </if>
+      <if test="filed4 != null" >
+        filed4 = #{filed4,jdbcType=VARCHAR},
+      </if>
+      <if test="filed5 != null" >
+        filed5 = #{filed5,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.kuheng.entity.member.KuCheZhuLine" >
+    update ku_chezhu_line
+    set userid = #{userid,jdbcType=INTEGER},
+      start_province = #{startProvince,jdbcType=VARCHAR},
+      start_city = #{startCity,jdbcType=VARCHAR},
+      start_town = #{startTown,jdbcType=VARCHAR},
+      stop_province = #{stopProvince,jdbcType=VARCHAR},
+      stop_city = #{stopCity,jdbcType=VARCHAR},
+      stop_town = #{stopTown,jdbcType=VARCHAR},
+      car_type = #{carType,jdbcType=VARCHAR},
+      car_length = #{carLength,jdbcType=VARCHAR},
+      send_type = #{sendType,jdbcType=BIT},
+      addtime = #{addtime,jdbcType=INTEGER},
+      lasttime = #{lasttime,jdbcType=INTEGER},
+      filed1 = #{filed1,jdbcType=VARCHAR},
+      filed2 = #{filed2,jdbcType=VARCHAR},
+      filed3 = #{filed3,jdbcType=VARCHAR},
+      filed4 = #{filed4,jdbcType=VARCHAR},
+      filed5 = #{filed5,jdbcType=VARCHAR}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <select id="selectline"  parameterType="map" resultType="map">
+  		select id, userid, start_province as startProvince, start_city as startCity, start_town as startTown, stop_province as stopProvince, stop_city as stopCity, stop_town as stopTown, 
+    car_type as carType, car_length as carLength from ku_chezhu_line where userid = #{userid,jdbcType=INTEGER}
+  </select>
+</mapper>
